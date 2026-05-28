@@ -11,7 +11,11 @@ pub struct FileTransaction {
 impl FileTransaction {
     pub async fn begin(path: &str) -> Result<Self, std::io::Error> {
         let path_buf = PathBuf::from(path);
-        let original_content = fs::read_to_string(&path_buf).await?;
+        let original_content = match fs::read_to_string(&path_buf).await {
+            Ok(content) => content,
+            Err(ref e) if e.kind() == std::io::ErrorKind::NotFound => String::new(),
+            Err(e) => return Err(e),
+        };
         Ok(Self {
             path: path_buf,
             original_content,
