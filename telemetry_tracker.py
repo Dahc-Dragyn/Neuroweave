@@ -4,6 +4,7 @@ import os
 import time
 
 LOG_FILE = "savings_log.json"
+PAYLOAD_FILE = "last_action_payload.json"
 
 def init_log():
     if not os.path.exists(LOG_FILE):
@@ -53,25 +54,33 @@ def update_savings(task_output, raw_prompt):
         json.dump(log_data, f, indent=4)
         
     print("📈 Telemetry Log Updated Successfully:")
+    print(f"   Prompt: {raw_prompt}")
     print(f"   Bypass Status: {resolved}")
     print(f"   Tokens Saved: {tokens if resolved else 0} | Cost Saved: ${cost if resolved else 0.0:.6f} | Energy Saved: {energy if resolved else 0.0} Wh")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python telemetry_tracker.py '<raw_prompt>' '<json_task_output>'")
+    if not os.path.exists(PAYLOAD_FILE):
+        print(f"❌ Error: Payload file '{PAYLOAD_FILE}' not found in the current directory.")
         sys.exit(1)
         
-    prompt_arg = sys.argv[1]
-    task_output_arg = sys.argv[2]
-    
     try:
-        # Clean Windows shell quote escaping artifacts
-        cleaned_json = task_output_arg.strip("'\"").replace('\\"', '"')
-        if "'" in cleaned_json and '"' not in cleaned_json:
-            cleaned_json = cleaned_json.replace("'", '"')
+        with open(PAYLOAD_FILE, "r", encoding="utf-8") as f:
+            payload = json.load(f)
             
-        task_out = json.loads(cleaned_json)
-        update_savings(task_out, prompt_arg)
+        # Support either flat structure or nested task_output
+        raw_prompt = payload.get("raw_prompt", "Unknown Action")
+        
+        if "task_output" in payload:
+            task_output = payload["task_output"]
+        else:
+            task_output = payload
+            
+        update_savings(task_output, raw_prompt)
+        
+        # Delete the payload file after successful update
+        os.remove(PAYLOAD_FILE)
+        print(f"🗑️ Cleaned up '{PAYLOAD_FILE}'.")
+        
     except Exception as e:
-        print(f"❌ Failed to parse telemetry args: {e}")
-        print(f"   Received raw arg: {task_output_arg}")
+        print(f"❌ Failed to process telemetry payload: {e}")
+        sys.exit(1)
