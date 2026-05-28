@@ -2,6 +2,26 @@
 
 Neuroweave is a high-performance, asynchronous **Deterministic Local Bypass Engine** compiled in Rust. It functions as a native Model Context Protocol (MCP) server daemon to intercept development intents, offloading repetitive, non-subjective workspace tasks directly to zero-cost, transactional local subroutines.
 
+## ⚡ One-Step Quick Start Installation
+
+Project Neuroweave is designed for zero-friction integration for any developer using the Antigravity Agent. You don't have to manually build binaries or configure files.
+
+### 💻 Windows Installation (PowerShell)
+Simply run the following command in the project root to compile the engine and automatically register it as an Antigravity MCP Server:
+```powershell
+./install.ps1
+```
+
+### 🍎 macOS / 🐧 Linux Installation (Bash)
+Run the automated installation script:
+```bash
+chmod +x install.sh && ./install.sh
+```
+
+The installer will automatically detect your active Antigravity/Gemini configuration, compile the optimized release binary, and link everything up instantly!
+
+---
+
 ## 🧠 The Problem It Solves
 
 Stochastic Large Language Models (LLMs) are highly capable but computationally expensive, slow, and prone to **"Semantic Drift"** when evaluating subjective directives.
