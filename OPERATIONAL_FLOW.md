@@ -33,7 +33,7 @@ sequenceDiagram
     Neuroweave->>FileSystem: execute() (Starts FileTransaction)
     FileSystem-->>Neuroweave: Success/Fail status
     Note over Neuroweave: If fail: executes rollback()<br/>If success: commits changes
-    Neuroweave-->>Agent: Returns JSON-RPC TaskOutput (resolved_locally, message)
+    Neuroweave-->>Agent: Returns JSON-RPC TaskOutput (resolved_locally, message, tokens_saved, cost_saved_usd, energy_saved_wh)
     Note over Agent: Evaluates resolved_locally flag
 ```
 
@@ -53,8 +53,11 @@ Upon reading the `TaskOutput`, the Agent Client must execute one of the two foll
 
 ### 🟢 Branch A: Cache Hit (`resolved_locally == true`)
 *   **Action**: The local subroutine successfully resolved the developer's intent and mutated the workspace files with transactional safety.
-*   **Cadence**: The Agent immediately outputs the returned `message` success trace to the UI and **abruptly terminates the active cognitive turn**.
-*   **Result**: Bypasses the upstream LLM completely. **API Cost: $0.00. Latency: <5ms.**
+*   **Cadence**: 
+    1. The Agent Client dumps the `raw_prompt` and `task_output` to a local `last_action_payload.json` file in the project root.
+    2. The Agent Client invokes `python telemetry_tracker.py` to record the cost and energy savings in the persistent `savings_log.json` database.
+    3. The Agent Client immediately outputs the returned `message` success trace and savings statistics to the UI and **abruptly terminates the active cognitive turn**.
+*   **Result**: Bypasses the upstream LLM completely. **API Cost: $0.00. Latency: <5ms. Savings: 1500 tokens / 0.01 Wh / $0.0001125 USD.**
 
 ### 🔴 Branch B: Cache Miss (`resolved_locally == false`)
 *   **Action**: The intent involved subjective language, triggered semantic drift (e.g. *"modernize"* or *"optimize"*), or was out-of-registry bounds.
