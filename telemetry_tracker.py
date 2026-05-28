@@ -58,9 +58,40 @@ def update_savings(task_output, raw_prompt):
     print(f"   Bypass Status: {resolved}")
     print(f"   Tokens Saved: {tokens if resolved else 0} | Cost Saved: ${cost if resolved else 0.0:.6f} | Energy Saved: {energy if resolved else 0.0} Wh")
 
+def print_dashboard():
+    init_log()
+    if not os.path.exists(LOG_FILE):
+        print("📉 No telemetry log found. Run some bypass tasks first!")
+        return
+        
+    with open(LOG_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        
+    runs = data.get("total_runs", 0)
+    bypasses = data.get("total_bypasses", 0)
+    rate = (bypasses / runs * 100) if runs > 0 else 0.0
+    
+    print("\n" + "="*50)
+    print("     ⚡ NEUROWEAVE BASAL GANGLIA SAVINGS LEDGER ⚡")
+    print("="*50)
+    print(f"  Total Prompts Intercepted : {runs}")
+    print(f"  Total Local Bypasses      : {bypasses}")
+    print(f"  Local Bypass Efficiency   : {rate:.1f}%")
+    print("-"*50)
+    print("  💎 Cumulative Resource Savings:")
+    print(f"    • Cloud Tokens Saved    : {data.get('total_tokens_saved', 0):,}")
+    print(f"    • Net Cost Saved (USD)  : ${data.get('total_cost_saved_usd', 0.0):.6f}")
+    print(f"    • Hardware Energy Saved : {data.get('total_energy_saved_wh', 0.0):.4f} Wh")
+    print("="*50 + "\n")
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in ("--stats", "-s"):
+        print_dashboard()
+        sys.exit(0)
+        
     if not os.path.exists(PAYLOAD_FILE):
         print(f"❌ Error: Payload file '{PAYLOAD_FILE}' not found in the current directory.")
+        print("💡 To view cumulative savings, run: python telemetry_tracker.py --stats")
         sys.exit(1)
         
     try:
