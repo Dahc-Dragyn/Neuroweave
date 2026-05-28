@@ -74,3 +74,40 @@ target/release/neuroweave.exe
 ```bash
 target/release/neuroweave.exe --mcp
 ```
+
+---
+
+## 📊 Telemetry & Savings Ledger
+
+To track and audit the cost, latency, and energy reductions achieved by Project Neuroweave, the engine operates a self-sustaining, file-based telemetry logging pipeline.
+
+### 🔄 Payload Mechanism
+To avoid shell-escaping limitations under complex CLI environments (such as PowerShell quote-stripping), all processes logging savings utilize a transactional file-based mechanism:
+
+1. The caller (the MCP server, pre-turn hooks, or validation scripts) writes the execution output to a temporary JSON file named `last_action_payload.json` in the root workspace folder:
+   ```json
+   {
+       "raw_prompt": "Quick, format the codebase.",
+       "task_output": {
+           "resolved_locally": true,
+           "execution_ms": 2,
+           "message": "Deterministic formatting applied.",
+           "tokens_saved": 1500,
+           "cost_saved_usd": 0.0001125,
+           "energy_saved_wh": 0.01
+       }
+   }
+   ```
+2. The caller executes the Python tracker script:
+   ```bash
+   python telemetry_tracker.py
+   ```
+3. The tracker parses the payload, updates the persistent ledger (`savings_log.json`), and automatically deletes `last_action_payload.json` to keep the workspace clean.
+
+### 📈 Metrics Tracking (`savings_log.json`)
+The ledger tracks cumulative historical metrics across the following schema:
+* `total_runs`: Total intercepted prompts triaged by Neuroweave.
+* `total_bypasses`: Total prompts resolved locally without invoking upstream cognitive APIs.
+* `total_tokens_saved`: Total tokens saved by bypassing standard cloud reasoning models (e.g., $0.000000075 per token basis).
+* `total_cost_saved_usd`: Total USD saved based on active LLM-Flash-Lite pricing structures.
+* `total_energy_saved_wh`: Total estimated energy footprint saved (e.g., 0.01 Wh per local vs cloud inference standard metric).
