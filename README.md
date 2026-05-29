@@ -100,6 +100,16 @@ If any of these subjective "danger words" appear in your prompt, Neuroweave auto
 * `architect`
 * `design`
 * `rework`
+* `bulletproof`
+* `harden`
+* `audit`
+* `review`
+* `evaluate`
+* `fix`
+* `debug`
+* `resolve`
+* `advise`
+* `integrate`
 
 *(For example, asking "format this codebase" runs locally in 2ms. Asking "improve and format this codebase" will safely escalate to the cloud LLM for review.)*
 
