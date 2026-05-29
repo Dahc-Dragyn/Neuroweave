@@ -19,7 +19,7 @@ pub fn evaluate_intent(payload: &IntentPayload) -> ConfidenceProfile {
 
     // Step 1: Strict Layer 4 Check (First priority) - Expanded subjective vocabulary list
     let drift = RE_SEMANTIC_DRIFT.get_or_init(|| {
-        Regex::new(r"(?i)improve|refactor|simplify|modernize|clean\s+this\s+up|optimize|architect|design|rework").unwrap()
+        Regex::new(r"(?i)improve|refactor|simplify|modernize|clean\s+this\s+up|optimize|architect|design|rework|bulletproof|harden|audit|review|evaluate|fix|debug|resolve|advise|integrate").unwrap()
     });
 
     let prompt = &payload.raw_prompt;
