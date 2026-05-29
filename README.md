@@ -76,6 +76,35 @@ Enforces strict security trust boundaries. Any interaction falling below `0.90` 
 
 ---
 
+## 🎯 Trigger Keywords & Triage Rules
+
+To use Neuroweave effectively, it is helpful to know exactly which keywords activate the local bypass engine, and which subjective words will cause the gate to escalate the prompt to the cloud LLM.
+
+### 🟢 Local Bypass Triggers (Muscle Memory)
+These keywords immediately map to ultra-fast local subroutines:
+* **Code Formatting / Linting (`FormatLint` Subroutine)**: 
+  * Trigger words: `format`, `lint` (e.g., *"Quick, format the codebase."*)
+* **Boilerplate Scaffolding (`ScaffoldModule` Subroutine)**: 
+  * Trigger words: `scaffold`, `init` (e.g., *"Scaffold the new controller."*)
+* **Import Optimization (`CleanImports` Subroutine)**: 
+  * Trigger words: Both `clean` and `imports` present in the prompt (e.g., *"Clean unused imports."*)
+
+### ⚠️ Cloud Escalation Words (Semantic Drift)
+If any of these subjective "danger words" appear in your prompt, Neuroweave automatically **escalates the prompt to the cloud LLM** to prevent local semantic drift and guarantee reasoning safety:
+* `improve`
+* `refactor`
+* `simplify`
+* `modernize`
+* `clean this up`
+* `optimize`
+* `architect`
+* `design`
+* `rework`
+
+*(For example, asking "format this codebase" runs locally in 2ms. Asking "improve and format this codebase" will safely escalate to the cloud LLM for review.)*
+
+---
+
 ## 🚀 Execution & Usage
 
 Neuroweave is configured to compile as a standalone static executable with zero external runtimes.
