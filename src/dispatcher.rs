@@ -13,6 +13,9 @@ pub async fn dispatch(profile: &ConfidenceProfile, payload: &IntentPayload) -> R
                 .escalation_reason
                 .clone()
                 .unwrap_or_else(|| "Low confidence or ambiguity detected. Escalating to LLM.".to_string()),
+            tokens_saved: 0,
+            cost_saved_usd: 0.0,
+            energy_saved_wh: 0.0,
         });
     }
 
@@ -27,6 +30,9 @@ pub async fn dispatch(profile: &ConfidenceProfile, payload: &IntentPayload) -> R
                 resolved_locally: false,
                 execution_ms: 0,
                 message: "Subroutine not yet implemented in registry. Escalating to LLM.".to_string(),
+                tokens_saved: 0,
+                cost_saved_usd: 0.0,
+                energy_saved_wh: 0.0,
             })
         }
     }

@@ -23,10 +23,17 @@ impl BasalTask for FormatLintTask {
 
         let duration = start.elapsed().as_millis() as u64;
 
+        let tokens_saved = 1500;
+        let cost_saved_usd = tokens_saved as f64 * 0.000000075;
+        let energy_saved_wh = 0.01;
+
         Ok(TaskOutput {
             resolved_locally: true,
             execution_ms: duration,
             message: "Deterministic formatting applied successfully via local muscle memory.".to_string(),
+            tokens_saved,
+            cost_saved_usd,
+            energy_saved_wh,
         })
     }
 

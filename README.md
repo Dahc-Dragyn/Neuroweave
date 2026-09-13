@@ -2,6 +2,14 @@
 
 Neuroweave is a high-performance, asynchronous **Deterministic Local Bypass Engine** compiled in Rust. It functions as a native Model Context Protocol (MCP) server daemon to intercept development intents, offloading repetitive, non-subjective workspace tasks directly to zero-cost, transactional local subroutines.
 
+> [!IMPORTANT]
+> ### 🛑 Architectural Reality Check: Built for Headless Agents, NOT Interactive Developers
+> If you are a human software engineer sitting in your IDE expecting a helpful conversational coding assistant, this project is not for you—and frankly, it will frustrate you.
+>
+> Human engineers naturally write subjective, conversational prompts (*"make this cleaner"*, *"help me refactor this"*, *"fix the layout"*). Every single one of these prompts trips Neuroweave's semantic drift firewall and escalates to the cloud LLM anyway. Furthermore, a human already has native keyboard shortcuts (`Shift+Alt+F`) and CLI aliases (`cargo fmt`) that run in 1 millisecond without an intermediary MCP proxy.
+>
+> **The True Architectural Target:** Neuroweave is an in-code, headless MCP middleware engineered specifically for autonomous agent loops and bot swarms (such as CI/CD build agents, batch-generation runners, and unattended worker subagents) that programmatically execute rigid, identical mechanical operations thousands of times per hour.
+
 ## ⚡ One-Step Quick Start Installation
 
 Project Neuroweave is designed for zero-friction integration for any developer using the Antigravity Agent. You don't have to manually build binaries or configure files.
@@ -170,3 +178,4 @@ The ledger tracks cumulative historical metrics across the following schema:
 * `total_tokens_saved`: Total tokens saved by bypassing standard cloud reasoning models (e.g., $0.000000075 per token basis).
 * `total_cost_saved_usd`: Total USD saved based on active LLM-Flash-Lite pricing structures.
 * `total_energy_saved_wh`: Total estimated energy footprint saved (e.g., 0.01 Wh per local vs cloud inference standard metric).
+

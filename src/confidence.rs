@@ -17,3 +17,4 @@ pub struct ConfidenceProfile {
     pub ambiguity_flags: Vec<AmbiguityFlag>,
     pub escalation_reason: Option<String>,
 }
+

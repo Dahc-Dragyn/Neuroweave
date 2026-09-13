@@ -18,3 +18,4 @@ pub trait BasalTask {
     #[allow(dead_code)]
     fn trust_radius(&self) -> TrustRadius;
 }
+

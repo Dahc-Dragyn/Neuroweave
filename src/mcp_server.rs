@@ -6,6 +6,7 @@ use crate::ipc::IntentPayload;
 use crate::router::evaluate_intent;
 use crate::dispatcher::dispatch;
 
+#[allow(dead_code)]
 #[derive(Deserialize, Debug)]
 struct JsonRpcRequest {
     jsonrpc: String,
@@ -13,6 +14,7 @@ struct JsonRpcRequest {
     method: String,
     params: Option<serde_json::Value>,
 }
+
 
 pub async fn run_mcp_server() {
     let mut reader = BufReader::new(io::stdin());
@@ -61,9 +63,33 @@ pub async fn run_mcp_server() {
 }
 
 async fn handle_rpc_request(req: JsonRpcRequest) {
+    // If it's a notification (no ID), do not respond to prevent JSON-RPC spec violations
+    let is_notification = req.id.is_none();
     let req_id = req.id.unwrap_or(serde_json::Value::Null);
 
     match req.method.as_str() {
+        "initialize" => {
+            let response = json!({
+                "jsonrpc": "2.0",
+                "id": req_id,
+                "result": {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {
+                        "tools": {}
+                    },
+                    "serverInfo": {
+                        "name": "neuroweave_basal_ganglia",
+                        "version": "1.0.0"
+                    }
+                }
+            });
+            println!("{}", response);
+            std::io::stdout().flush().expect("Failed to flush stdout buffer");
+            eprintln!("[Neuroweave MCP] Response flushed to stdout.");
+        }
+        "notifications/initialized" | "initialized" => {
+            eprintln!("[Neuroweave MCP] Client initialized successfully.");
+        }
         "tools/list" => {
             let response = json!({
                 "jsonrpc": "2.0",
@@ -134,7 +160,11 @@ async fn handle_rpc_request(req: JsonRpcRequest) {
             }
         }
         _ => {
-            send_error(req_id, -32601, &format!("Method not found: {}", req.method));
+            if is_notification {
+                eprintln!("[Neuroweave MCP] Ignored unknown notification: {}", req.method);
+            } else {
+                send_error(req_id, -32601, &format!("Method not found: {}", req.method));
+            }
         }
     }
 }

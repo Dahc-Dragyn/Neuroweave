@@ -63,3 +63,4 @@ Upon reading the `TaskOutput`, the Agent Client must execute one of the two foll
 *   **Action**: The intent involved subjective language, triggered semantic drift (e.g. *"modernize"* or *"optimize"*), or was out-of-registry bounds.
 *   **Cadence**: The Agent reads the `escalation_reason` and seamlessly escalates the prompt to the designated upstream LLM (defaulting to the highly economical `gemini-3.1-flash-lite`) for standard cognitive execution and reasoning.
 *   **Result**: Ensures complex, novel, or subjective tasks are still safely handled by the cognitive capabilities of the AI.
+

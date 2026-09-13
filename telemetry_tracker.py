@@ -93,6 +93,7 @@ if __name__ == "__main__":
         print(f"❌ Error: Payload file '{PAYLOAD_FILE}' not found in the current directory.")
         print("💡 To view cumulative savings, run: python telemetry_tracker.py --stats")
         sys.exit(1)
+
         
     try:
         with open(PAYLOAD_FILE, "r", encoding="utf-8") as f:
@@ -115,3 +116,4 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"❌ Failed to process telemetry payload: {e}")
         sys.exit(1)
+

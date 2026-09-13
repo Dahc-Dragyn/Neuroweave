@@ -4,3 +4,4 @@ Cargo.lock
 .env
 test_workspace.txt
 target_workspace.rs
+savings_log.json
